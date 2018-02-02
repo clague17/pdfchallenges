@@ -1,14 +1,20 @@
 from collections import *
 from Tkinter import *
 from tkColorChooser import *
-import webcolors
-# 
-# mainloop()
+import json
+import random
+#from webcolors import *
+#import colordata
+# -*- coding: utf-8 -*- 
 if __name__ == '__main__':
 	root = Tk()
 	root.title("Number to color chart")
 	frame = Frame(root)
 	frame.pack()
+
+	#user input
+	#entry = Entry(frame, 'input number 10-20 digits')
+
 def displayColors():
 	MAX_ROWS = 36
 	FONT_SIZE = 10 # (pixels)
@@ -89,6 +95,7 @@ def displayColors():
 	    'gray75', 'gray76', 'gray77', 'gray78', 'gray79', 'gray80', 'gray81', 'gray82', 'gray83',
 	    'gray84', 'gray85', 'gray86', 'gray87', 'gray88', 'gray89', 'gray90', 'gray91', 'gray92',
 	    'gray93', 'gray94', 'gray95', 'gray97', 'gray98', 'gray99']
+
 	row = 0
 	col = 0
 	for color in COLORS:
@@ -101,17 +108,64 @@ def displayColors():
 			row = 0
 			col += 1
 
-def numberToColor(entry):
-	pass
+def numberToThreeTuple(number):
+	'''
+	Takes a 10-20 digit integer as input and parses it to either permutations of three digits or random
+	one, two, and three digit triples, according to its divisibility by three. 
+	Decision: if it is not divisible by three, 
+	Working example: 1234567891
+	'''
+	string = str(number)
+	length = len(string)
+	excess = string[-(length%3)] #excess means the string is not divisible by three
+	colorTriple = []
+	triple = ''
+	if excess:
+		for i in range(2): #calculates what to divide the original thing, completely arbitrary
+			digit = string[length//(i+3)] #3 is arbitrary just to make it interesting i guess...
+			triple += digit
+		colorTriple.append(triple)
+	i = 0
+	j = i+2 #splice it by threes
+	while j <= length-1:
+		strcandidate =  string[i:(j+1)] #takes three digits of each number
+		candidate = int(strcandidate)
+		while candidate > 255: #if the number is above the range, arbitrarily divide by three and take its floor
+			candidate = candidate//3
+		colorTriple.append(int(candidate))
+		j += 1
+		i += 1
+	return colorTriple
+
+#print numberToThreeTuple(12345678913677878789)
+
+
+def numberToColor():
+	'''
+	Output: Maybe returns a list?? it could be a list of all the colors... Thats not bad!
+	'''
+	master_input = entry.get()
+	#convert it to rgb values, especially if more than 9!
+	#what do I do 
+	with open('colordata.json', 'r') as f:
+		colors_dict = json.load(f) #saves json file as a dictionary for python access
+	print colors_dict
+	for color in colors_dict:
+		if color['colorId'] == 0: #finds a match and prints the color name for now!
+			print color['name']
 
 #buttons in GUI
 allcolors = Button(frame, text='View ALL colors', command=displayColors)
 allcolors.pack(side=LEFT)
 #input number and calculate stuff
 field = 'Input number between 10-20 digits'
+
 # inputnum = Button(frame, text='Submit Number', command=numberToColor)
 # inputnum.pack(side=RIGHT)
 
 
 # displayGUI()
-root.mainloop()
+#root.mainloop()
+
+
+
