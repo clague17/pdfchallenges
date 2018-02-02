@@ -6,14 +6,7 @@ import random
 #from webcolors import *
 #import colordata
 # -*- coding: utf-8 -*- 
-if __name__ == '__main__':
-	root = Tk()
-	root.title("Number to color chart")
-	frame = Frame(root)
-	frame.pack()
 
-	#user input
-	#entry = Entry(frame, 'input number 10-20 digits')
 
 def displayColors():
 	MAX_ROWS = 36
@@ -124,7 +117,7 @@ def numberToThreeTuple(number):
 		for i in range(2): #calculates what to divide the original thing, completely arbitrary
 			digit = string[length//(i+3)] #3 is arbitrary just to make it interesting i guess...
 			triple += digit
-		colorTriple.append(triple)
+		colorTriple.append(int(triple))
 	i = 0
 	j = i+2 #splice it by threes
 	while j <= length-1:
@@ -135,37 +128,96 @@ def numberToThreeTuple(number):
 		colorTriple.append(int(candidate))
 		j += 1
 		i += 1
+	while not len(colorTriple) % 3 == 0: #this loop makes the length of colorTriple always a factor of three, so that we can compute complete three-tuples without numbers left over 
+		colorTriple.append(colorTriple[len(colorTriple)//5])
 	return colorTriple
 
-#print numberToThreeTuple(12345678913677878789)
+#print numberToThreeTuple(12345678912344678)
 
-
-def numberToColor():
+def numberToColor(num):
 	'''
-	Output: Maybe returns a list?? it could be a list of all the colors... Thats not bad!
+	Input: nothing really, the input is dictated by the tkinter module, so this input is a dummy
+	Output: a list of three-tuples representing rgb traits respectively
 	'''
 	master_input = entry.get()
+	print master_input
+	triples = numberToThreeTuple(master_input)
+	#triples = numberToThreeTuple(num)
 	#convert it to rgb values, especially if more than 9!
-	#what do I do 
+	#convert list into three-tuples
+	three_tuples = []
+	i = 0
+	lst = []
+	for i in range(len(triples)):
+		if (i+1) % 3 == 0:
+			lst.append(triples[i])
+			three_tuples.append(tuple(lst))
+			del lst[:]
+		else:
+			lst.append(triples[i])
+	results.insert(END, 'the corresponding colors are:')
+	results.insert(END, three_tuples)
+	#now match the three-tuples to their names in colors!
 	with open('colordata.json', 'r') as f:
-		colors_dict = json.load(f) #saves json file as a dictionary for python access
-	print colors_dict
-	for color in colors_dict:
-		if color['colorId'] == 0: #finds a match and prints the color name for now!
-			print color['name']
+		colors_list = json.load(f) #saves json file as a listb for python access
+	# print colors_list[2]['rgb']['b']
+	# print len(colors_list)
+	print three_tuples
+	color_results = []
+	for i in range(len(three_tuples)):
+		for j in range(len(colors_list)):
+			# print 'tuples', three_tuples[i][0]
+			# print 'color', colors_list[j]
+			if three_tuples[i][0] == colors_list[j]['rgb']['r']:
+				#only one condition is met
+				if len(color_results) <= len(three_tuples):
+					color_results.append(colors_list[j]['name'])
+				if three_tuples[i][1] == colors_list[j]['rgb']['g']:
+					#Two conditions are met
+					if len(color_results) <= len(three_tuples):
+						color_results.append(colors_list[j]['name'])
+					if three_tuples[i][2] == colors_list[j]['rgb']['b']:
+						#all three conditions are met!
+						print colors_list[j]['name']
+						if len(color_results) <= len(three_tuples):
+							color_results.append(colors_list[j]['name'])
+	results.insert(END, color_results)
+	if len(color_results) < len(three_tuples):
+		results.insert(END, 'The colors generated are not named!! Use the color picker to visualize the colors!')
+				#else:
+					#print colors_list[j]['name']
+	return color_results
 
+	#if all three numbers dont match because not all numbers are named, return at least one number that matches!
+
+# print numberToColor(6786806875447)
+
+#GUI stuff
+
+root = Tk()
+root.title("Number to Color!")
+
+explanation = Text(root, height=1,width=30,bg='peach puff')
+explanation.pack()
+explanation.insert(CURRENT, "Welcome to Number to Color!")
+logo = PhotoImage(file="guiimage.ppm")
+entry = Entry(root) #create input 
+photo = Label(root,image=logo).pack(side=TOP)
+#entry.grid(row = 0, column = 1)
+color = entry.bind('<Return>', numberToColor) #runs program when user presses enter!
+entry.pack()
+results = Text(root, height=10, width=35, bg='peach puff')
+results.pack()
+
+#text.insert(END, '\n{}\n'.format(color))
+
+numbertocolor = Button(root, text='Submit', command=numberToColor)
+numbertocolor.pack(side=RIGHT)
 #buttons in GUI
-allcolors = Button(frame, text='View ALL colors', command=displayColors)
+allcolors = Button(root, text='View ALL colors', command=displayColors)
 allcolors.pack(side=LEFT)
-#input number and calculate stuff
-field = 'Input number between 10-20 digits'
 
-# inputnum = Button(frame, text='Submit Number', command=numberToColor)
-# inputnum.pack(side=RIGHT)
-
-
-# displayGUI()
-#root.mainloop()
+root.mainloop()
 
 
 
