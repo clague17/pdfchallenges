@@ -115,7 +115,7 @@ def numberToThreeTuple(number):
 	triple = ''
 	if excess:
 		for i in range(2): #calculates what to divide the original thing, completely arbitrary
-			digit = string[length//(i+3)] #3 is arbitrary just to make it interesting i guess...
+			digit = string[length//(i+3)] #3 is arbitrary just to make it interesting
 			triple += digit
 		colorTriple.append(int(triple))
 	i = 0
@@ -129,7 +129,7 @@ def numberToThreeTuple(number):
 		j += 1
 		i += 1
 	while not len(colorTriple) % 3 == 0: #this loop makes the length of colorTriple always a factor of three, so that we can compute complete three-tuples without numbers left over 
-		colorTriple.append(colorTriple[len(colorTriple)//5])
+		colorTriple.append(colorTriple[len(colorTriple)//5]) #again the five is just arbitrary
 	return colorTriple
 
 #print numberToThreeTuple(12345678912344678)
@@ -138,11 +138,12 @@ def numberToColor(num):
 	'''
 	Input: nothing really, the input is dictated by the tkinter module, so this input is a dummy
 	Output: a list of three-tuples representing rgb traits respectively
+
+	Note: not all possible combinations of rgb are explicitly named
 	'''
 	master_input = entry.get()
 	print master_input
 	triples = numberToThreeTuple(master_input)
-	#triples = numberToThreeTuple(num)
 	#convert it to rgb values, especially if more than 9!
 	#convert list into three-tuples
 	three_tuples = []
@@ -159,7 +160,7 @@ def numberToColor(num):
 	results.insert(END, three_tuples)
 	#now match the three-tuples to their names in colors!
 	with open('colordata.json', 'r') as f:
-		colors_list = json.load(f) #saves json file as a listb for python access
+		colors_list = json.load(f) #saves json file as a list for python access
 	# print colors_list[2]['rgb']['b']
 	# print len(colors_list)
 	print three_tuples
@@ -181,11 +182,10 @@ def numberToColor(num):
 						print colors_list[j]['name']
 						if len(color_results) <= len(three_tuples):
 							color_results.append(colors_list[j]['name'])
+							#rarely ever reaches this
 	results.insert(END, color_results)
 	if len(color_results) < len(three_tuples):
 		results.insert(END, 'The colors generated are not named!! Use the color picker to visualize the colors!')
-				#else:
-					#print colors_list[j]['name']
 	return color_results
 
 	#if all three numbers dont match because not all numbers are named, return at least one number that matches!
@@ -208,8 +208,6 @@ color = entry.bind('<Return>', numberToColor) #runs program when user presses en
 entry.pack()
 results = Text(root, height=10, width=35, bg='peach puff')
 results.pack()
-
-#text.insert(END, '\n{}\n'.format(color))
 
 numbertocolor = Button(root, text='Submit', command=numberToColor)
 numbertocolor.pack(side=RIGHT)
