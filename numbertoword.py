@@ -103,9 +103,9 @@ def displayColors():
 
 def numberToThreeTuple(number):
 	'''
-	Takes a 10-20 digit integer as input and parses it to either permutations of three digits or random
-	one, two, and three digit triples, according to its divisibility by three. 
-	Decision: if it is not divisible by three, 
+	Takes a 10-20 digit integer as input and parses it to a list of length divisible 
+	by three, containing 3-tuples representing the rgb color values. 
+	Decision: if it is not divisible by three, arbitrarily add elements until the conditional is met. 
 	Working example: 1234567891
 	'''
 	string = str(number)
@@ -153,7 +153,7 @@ def numberToColor(num):
 		if (i+1) % 3 == 0:
 			lst.append(triples[i])
 			three_tuples.append(tuple(lst))
-			del lst[:]
+			del lst[:] #clears the list thats converted to tuples, once it is of length 3
 		else:
 			lst.append(triples[i])
 	results.insert(END, 'the corresponding colors are:')

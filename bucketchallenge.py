@@ -27,16 +27,12 @@ def targetbuckets(buckets, target):
 	Inputs: a list of integers, 'buckets', a combination of which must sum to the integer 'target'
 	Output: True/False respectively if 'target' can be reached by strict sum  
 	'''
-	# if target < 0:
-	# 	return False
-	# elif target in buckets:
-	# 	return True
 	if not buckets and target:
 		return "No target can be achieved with zero buckets!"
 	if target < 0:
 		return "Cant really achieve a negative target number... Try a positive!"
 	if target == 0:
-		return True, "a target of 0 can be achieved by nothing, or is it everything?"
+		return True, "a target of 0 can be achieved by everything, or is it nothing?"
 	counter = 0
 	maximum = len(buckets)
 	while counter < maximum:
