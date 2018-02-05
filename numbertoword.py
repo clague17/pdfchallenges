@@ -203,7 +203,6 @@ explanation.insert(CURRENT, "Welcome to Number to Color!")
 logo = PhotoImage(file="guiimage.ppm")
 entry = Entry(root) #create input 
 photo = Label(root,image=logo).pack(side=TOP)
-#entry.grid(row = 0, column = 1)
 color = entry.bind('<Return>', numberToColor) #runs program when user presses enter!
 entry.pack()
 results = Text(root, height=10, width=35, bg='peach puff')

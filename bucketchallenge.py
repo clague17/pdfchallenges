@@ -57,8 +57,17 @@ def targetbuckets(buckets, target):
 # print targetbuckets(buckets, target) 
 # print 95%3
 
-buckets = [1]
-target = 0
+# buckets = [5, 7]
+# target = 5
+
+# buckets = [5, 7]
+# target = 33
+
+# buckets = [5, 7]
+# target = 9
+
+# buckets = [1]
+# target = 0
 print targetbuckets(buckets, target)
 
 
